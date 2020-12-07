@@ -1,12 +1,21 @@
-Tesseract OCR
+4 New Text Document (2).b¢t - Notepad - a
+bpm init
 
+npm install express
 
-Tesseract is an open-source text recognition engine that is available under the Apache 2.0 license
-and its development has been sponsored by Google since 2006. In the year 2006, Tesseract was
-considered os one of the most accurate open-source OCR
-engines. You can use it directly or can use
-the API to extract the printed text from images. The best part is that it supports on extensive variety
-of longuages. It is through wrappers that Tesseract can be made compatible with different
-programming languages and frameworks. In this blog, I'll be using the Python wrapper named
-pytesseract It is used to recognize text from a large document, or it can also be used to recognize
-text from an image of a single text line. Below is the visual representation of the Tesseract OCR
+npm install -save-dev nodemon
+
+npm install mongoose //install mongodb driver
+npm install dotenv
+
+npm install body-parser
+
+npm install @hapi/joi
+
+npm install beryptjs
+
+npm install jsonwebtoken
+
+npm install nodemailer
+
+npm install generate-password --save

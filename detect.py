@@ -20,7 +20,7 @@ def pre_processing(image):
     cv2.imshow('threshold image', threshold_img)
     # Maintain output window until
     # user presses a key
-    cv2.waitKey(0)
+    #cv2.waitKey(0)
     # Destroying present windows on screen
     cv2.destroyAllWindows()
 
@@ -66,7 +66,7 @@ def draw_boxes(image, details, threshold_point):
     # display image
     cv2.imshow('captured text', image)
     # Maintain output window until user presses a key
-    cv2.waitKey(0)
+    #cv2.waitKey(0)
     # Destroying present windows on screen
     cv2.destroyAllWindows()
 
