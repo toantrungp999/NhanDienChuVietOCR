@@ -1,21 +1,13 @@
-4 New Text Document (2).b¢t - Notepad - a
-bpm init
+“ Favorites Ne
 
-npm install express
+4 Downloads
+<:, Recent places
+ME Desktop
+_, Google Drive
 
-npm install -save-dev nodemon
+#8 Homegroup
 
-npm install mongoose //install mongodb driver
-npm install dotenv
+Me This PC
+ve Desktop
 
-npm install body-parser
-
-npm install @hapi/joi
-
-npm install beryptjs
-
-npm install jsonwebtoken
-
-npm install nodemailer
-
-npm install generate-password --save
+Document:

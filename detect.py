@@ -23,7 +23,7 @@ def pre_processing(image):
     #cv2.waitKey(0)
     # Destroying present windows on screen
     cv2.destroyAllWindows()
-
+    print(threshold_img)
     return threshold_img
 
 
@@ -44,7 +44,7 @@ def parse_text(threshold_img):
     return details
 
 
-def draw_boxes(image, details, threshold_point):
+def draw_boxes(thresholds_image, details, threshold_point):
     """
     This function takes three argument as
     input. it draw boxes on text area detected
@@ -60,11 +60,11 @@ def draw_boxes(image, details, threshold_point):
         if int(details['conf'][sequence_number]) > threshold_point:
             (x, y, w, h) = (details['left'][sequence_number], details['top'][sequence_number],
                             details['width'][sequence_number], details['height'][sequence_number])
-            image = cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            thresholds_image = cv2.rectangle(thresholds_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
     # saving image to local
-    cv2.imwrite('captured_text_area.png', image)
+    cv2.imwrite('captured_text_area.png', thresholds_image)
     # display image
-    cv2.imshow('captured text', image)
+    cv2.imshow('captured text', thresholds_image)
     # Maintain output window until user presses a key
     #cv2.waitKey(0)
     # Destroying present windows on screen
@@ -120,3 +120,4 @@ if __name__ == "__main__":
     arranged_text = format_text(parsed_data)
     # calling write_text function which will write arranged text into file
     write_text(arranged_text)
+    print(arranged_text)
