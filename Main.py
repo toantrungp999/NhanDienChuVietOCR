@@ -132,11 +132,11 @@ class DetectWord:
 
 class MainWindow(QMainWindow):
 
-    def __init__(self, image=None):
+    def __init__(self, image=''):
         super().__init__()
 
         self.setObjectName("MainWindow")
-        self.resize(710, 360)
+     
         self.centralwidget = QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
         self.setStyleSheet("background-color: #F0F2F5;")
@@ -170,17 +170,19 @@ class MainWindow(QMainWindow):
         self.labelResult.setGeometry(QRect(340, 120, 47, 13))
         self.labelResult.setObjectName("labelResult")
 
-        if image != None:
+        if image != '':
             self.labelImg.setPixmap(QPixmap(image))
         self.image = image
 
         self.snippingTool = SnippingTool.SnippingWidget()
-
+        self.resize(710, 360)
+        self.setWindowTitle("Chương trình đọc chữ từ hình ảnh")
         self.setCentralWidget(self.centralwidget)
         self.retranslateUi()
         QMetaObject.connectSlotsByName(self)
-        self.setWindowTitle("Chương trình đọc chữ từ hình ảnh")
         self.show()
+        
+        #cv2.waitKey(0)
 
     def retranslateUi(self):
         _translate = QCoreApplication.translate
@@ -208,18 +210,22 @@ class MainWindow(QMainWindow):
             self.labelImg.setPixmap(QPixmap(fileName))
             self.image = fileName
 
+    # TODO exit application when we exit all windows
+    def closeEvent(self, event):
+        sys.exit()
+
     def startProcess(self):
         if self.image != None:
             detectWord = DetectWord(self.image, "result.txt")
             self.txtResult.setText(detectWord.excute())
 
     def screenShot(self):
-        if self.snippingTool.background:
-            self.close()
+        #mở sniipng tool nek mà mở xong nó ko mỏ lại
+        self.hide()
         self.snippingTool.start()
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    MW = MainWindow()
+    mainWindow = MainWindow()
     sys.exit(app.exec_())

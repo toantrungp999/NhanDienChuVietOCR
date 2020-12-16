@@ -3,7 +3,6 @@ import numpy as np
 import cv2
 from PIL import ImageGrab
 from PyQt5 import QtWidgets, QtCore, QtGui
-
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QImage
 import Main
@@ -25,6 +24,7 @@ class SnippingWidget(QtWidgets.QWidget):
         self.setGeometry(0, 0, screen_width, screen_height)
         self.begin = QtCore.QPoint()
         self.end = QtCore.QPoint()
+        self.mainWindow = None
 
     def start(self):
         self.setWindowFlags(Qt.WindowStaysOnTopHint)
@@ -72,6 +72,12 @@ class SnippingWidget(QtWidgets.QWidget):
         self.end = event.pos()
         self.update()
 
+    @staticmethod
+    def convert_numpy_img_to_qpixmap(np_img):
+        height, width, channel = np_img.shape
+        bytesPerLine = 3 * width
+        return QPixmap(QImage(np_img.data, width, height, bytesPerLine, QImage.Format_RGB888).rgbSwapped())
+
     def mouseReleaseEvent(self, event):
         SnippingWidget.num_snip += 1
         SnippingWidget.is_snipping = False
@@ -88,12 +94,11 @@ class SnippingWidget(QtWidgets.QWidget):
         img = cv2.cvtColor(np.array(img), cv2.COLOR_BGR2RGB)
         image = self.convert_numpy_img_to_qpixmap(img)
         image.save("sreenshot.jpg")
-        # add to the snips list the object that opens a window of the image
-        Main.MainWindow("sreenshot.jpg")
-        
 
-    @staticmethod
-    def convert_numpy_img_to_qpixmap(np_img):
-        height, width, channel = np_img.shape
-        bytesPerLine = 3 * width
-        return QPixmap(QImage(np_img.data, width, height, bytesPerLine, QImage.Format_RGB888).rgbSwapped())
+        # add to the snips list the object that opens a window of the image
+        self.mainWindow = Main.MainWindow("sreenshot.jpg")#bật lại nek
+        self.show()
+        self.close()
+        #gọi ben kia mở lại
+
+    
