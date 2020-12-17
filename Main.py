@@ -50,7 +50,7 @@ class DetectWord:
         tesseract_config = r'--oem 3 --psm 6'
         # now feeding image to tesseract
         # your path may be different
-        pytesseract.pytesseract.tesseract_cmd = 'C:/Program Files/Tesseract-OCR/tesseract.exe'
+        pytesseract.pytesseract.tesseract_cmd = 'C:/DevApp/Python_Library/Tesseract/tesseract.exe'
         details = pytesseract.image_to_data(threshold_img, output_type=pytesseract.Output.DICT,
                                             config=tesseract_config, lang='eng')
         return details
@@ -143,6 +143,7 @@ class MainWindow(QMainWindow):
 
         self.labelImg = QLabel(self.centralwidget)
         self.labelImg.setGeometry(QRect(50, 20, 260, 260))
+        self.labelImg.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
         self.labelImg.setObjectName("labelImg")
         self.labelImg.setStyleSheet(
             "background-color: gray;border: 1px solid black;")
@@ -171,7 +172,7 @@ class MainWindow(QMainWindow):
         self.labelResult.setObjectName("labelResult")
 
         if image != '':
-            self.labelImg.setPixmap(QPixmap(image))
+            self.labelImg.setPixmap(QPixmap(image).scaled(self.labelImg.size(),Qt.KeepAspectRatio,Qt.SmoothTransformation))
         self.image = image
 
         self.snippingTool = SnippingTool.SnippingWidget()
@@ -198,16 +199,15 @@ class MainWindow(QMainWindow):
                                           "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
         self.labelResult.setText(_translate("MainWindow", "Kết quả"))
         self.btnStart.setText(_translate("MainWindow", "Bắt đầu quá trình"))
-        self.btnSreenShot.setText(_translate(
-            "MainWindow", "Chụp ảnh màn hình"))
+        self.btnSreenShot.setText(_translate("MainWindow", "Chụp ảnh màn hình"))
 
     def openFileNameDialog(self):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
         fileName, _ = QFileDialog.getOpenFileName(
-            self, "", r"<Default dir>", "Image files (*.jpg *.jpeg *.gif)", options=options)
+            self, "", r"<Default dir>", "Image files (*.jpg *.jpeg *.gif *.png)", options=options)
         if fileName:
-            self.labelImg.setPixmap(QPixmap(fileName))
+            self.labelImg.setPixmap(QPixmap(fileName).scaled(self.labelImg.size(),Qt.KeepAspectRatio,Qt.SmoothTransformation))
             self.image = fileName
 
     # TODO exit application when we exit all windows

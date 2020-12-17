@@ -38,7 +38,7 @@ def parse_text(threshold_img):
     # configuring parameters for tesseract
     tesseract_config = r'--oem 3 --psm 6'
     # now feeding image to tesseract
-    pytesseract.pytesseract.tesseract_cmd = 'C:/Program Files/Tesseract-OCR/tesseract.exe'  # your path may be different
+    pytesseract.pytesseract.tesseract_cmd = 'C:/DevApp/Python_Library/Tesseract/tesseract.exe'  # your path may be different
     details = pytesseract.image_to_data(threshold_img, output_type=pytesseract.Output.DICT,
                                         config=tesseract_config, lang='eng')
     return details
