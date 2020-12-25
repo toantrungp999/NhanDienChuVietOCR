@@ -97,8 +97,8 @@ class SnippingWidget(QtWidgets.QWidget):
 
         # add to the snips list the object that opens a window of the image
         self.mainWindow = Main.MainWindow("sreenshot.jpg")#bật lại nek
-        self.show()
-        self.close()
+        self.mainWindow.show()
+        self.hide()
         #gọi ben kia mở lại
 
     

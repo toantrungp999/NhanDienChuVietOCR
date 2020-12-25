@@ -8,9 +8,12 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 import SnippingTool
 
+language = 'eng'
+
 
 class DetectWord:
-    def __init__(self, image, pathFileResult):
+    def __init__(self, languae, image, pathFileResult):
+        self.languae = languae
         self.image = image
         self.pathFileResult = pathFileResult
 
@@ -50,9 +53,10 @@ class DetectWord:
         tesseract_config = r'--oem 3 --psm 6'
         # now feeding image to tesseract
         # your path may be different
-        pytesseract.pytesseract.tesseract_cmd = 'C:/DevApp/Python_Library/Tesseract/tesseract.exe'
+        pytesseract.pytesseract.tesseract_cmd = 'C:/Program Files/Tesseract-OCR/tesseract.exe'
         details = pytesseract.image_to_data(threshold_img, output_type=pytesseract.Output.DICT,
-                                            config=tesseract_config, lang='eng')
+                                            config=tesseract_config, lang=self.languae)
+        # vie
         return details
 
     def draw_boxes(self, thresholds_image, details, threshold_point):
@@ -110,7 +114,8 @@ class DetectWord:
         :param formatted_text: list
         :return: None
         """
-        with open(self.pathFileResult, 'w', newline="") as file:
+        print(formatted_text)
+        with open(self.pathFileResult, 'w', newline="", encoding="utf-8") as file:
             csv.writer(file, delimiter=" ").writerows(formatted_text)
 
     def excute(self):
@@ -126,7 +131,7 @@ class DetectWord:
         arranged_text = self.format_text(parsed_data)
         # calling write_text function which will write arranged text into file
         self.write_text(arranged_text)
-        f = open(self.pathFileResult, "r")
+        f = open(self.pathFileResult, mode="r", encoding="utf-8")
         return f.read()
 
 
@@ -136,7 +141,7 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.setObjectName("MainWindow")
-     
+
         self.centralwidget = QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
         self.setStyleSheet("background-color: #F0F2F5;")
@@ -158,8 +163,20 @@ class MainWindow(QMainWindow):
         self.btnSreenShot.setObjectName("btnSreenShot")
         self.btnSreenShot.clicked.connect(self.screenShot)
 
+        self.lbChooseLanguage = QLabel(self.centralwidget)
+        self.lbChooseLanguage.setGeometry(QRect(70, 320, 110, 23))
+        self.lbChooseLanguage.setObjectName("lbChooseLanguage")
+
+        self.cbChooseLanguage = QCheckBox(self.centralwidget)
+        self.cbChooseLanguage.setGeometry(QRect(135, 320, 110, 23))
+        self.cbChooseLanguage.setObjectName("cbChooseLanguage")
+        self.cbChooseLanguage.stateChanged.connect(self.clickBox)
+        global language
+        if language == 'vie':
+            self.cbChooseLanguage.setChecked(True)
+
         self.btnStart = QPushButton(self.centralwidget)
-        self.btnStart.setGeometry(QRect(300, 320, 111, 23))
+        self.btnStart.setGeometry(QRect(300, 340, 111, 23))
         self.btnStart.setObjectName("btnStart")
         self.btnStart.clicked.connect(self.startProcess)
 
@@ -172,18 +189,25 @@ class MainWindow(QMainWindow):
         self.labelResult.setObjectName("labelResult")
 
         if image != '':
-            self.labelImg.setPixmap(QPixmap(image).scaled(self.labelImg.size(),Qt.KeepAspectRatio,Qt.SmoothTransformation))
+            self.labelImg.setPixmap(QPixmap(image).scaled(
+                self.labelImg.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
         self.image = image
-
         self.snippingTool = SnippingTool.SnippingWidget()
-        self.resize(710, 360)
+        self.resize(710, 380)
         self.setWindowTitle("Chương trình đọc chữ từ hình ảnh")
         self.setCentralWidget(self.centralwidget)
         self.retranslateUi()
         QMetaObject.connectSlotsByName(self)
         self.show()
-        
-        #cv2.waitKey(0)
+
+        # cv2.waitKey(0)
+
+    def clickBox(self, state):
+        global language
+        if state == Qt.Checked:
+            language = 'vie'
+        else:
+            language = 'eng'
 
     def retranslateUi(self):
         _translate = QCoreApplication.translate
@@ -199,7 +223,10 @@ class MainWindow(QMainWindow):
                                           "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
         self.labelResult.setText(_translate("MainWindow", "Kết quả"))
         self.btnStart.setText(_translate("MainWindow", "Bắt đầu quá trình"))
-        self.btnSreenShot.setText(_translate("MainWindow", "Chụp ảnh màn hình"))
+        self.cbChooseLanguage.setText(_translate("MainWindow", "Tiếng việt"))
+        self.lbChooseLanguage.setText(_translate("MainWindow", "Ngôn ngữ:"))
+        self.btnSreenShot.setText(_translate(
+            "MainWindow", "Chụp ảnh màn hình"))
 
     def openFileNameDialog(self):
         options = QFileDialog.Options()
@@ -207,7 +234,8 @@ class MainWindow(QMainWindow):
         fileName, _ = QFileDialog.getOpenFileName(
             self, "", r"<Default dir>", "Image files (*.jpg *.jpeg *.gif *.png)", options=options)
         if fileName:
-            self.labelImg.setPixmap(QPixmap(fileName).scaled(self.labelImg.size(),Qt.KeepAspectRatio,Qt.SmoothTransformation))
+            self.labelImg.setPixmap(QPixmap(fileName).scaled(
+                self.labelImg.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
             self.image = fileName
 
     # TODO exit application when we exit all windows
@@ -216,11 +244,12 @@ class MainWindow(QMainWindow):
 
     def startProcess(self):
         if self.image != None:
-            detectWord = DetectWord(self.image, "result.txt")
+            global language
+            detectWord = DetectWord(language, self.image, "result.txt")
             self.txtResult.setText(detectWord.excute())
 
     def screenShot(self):
-        #mở sniipng tool nek mà mở xong nó ko mỏ lại
+        # mở sniipng tool nek mà mở xong nó ko mỏ lại
         self.hide()
         self.snippingTool.start()
 
