@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 import SnippingTool
+import codecs
 
 language = 'eng'
 
@@ -188,6 +189,12 @@ class MainWindow(QMainWindow):
         self.labelResult.setGeometry(QRect(340, 120, 47, 13))
         self.labelResult.setObjectName("labelResult")
 
+        self.btnSaveFile = QPushButton(self.centralwidget)
+        self.btnSaveFile.setGeometry(QRect(500, 290, 80, 23))
+        self.btnSaveFile.setObjectName("btnSaveFile")
+        self.btnSaveFile.clicked.connect(self.saveFile)
+        
+        self.result = ''
         if image != '':
             self.labelImg.setPixmap(QPixmap(image).scaled(
                 self.labelImg.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
@@ -225,6 +232,7 @@ class MainWindow(QMainWindow):
         self.btnStart.setText(_translate("MainWindow", "Bắt đầu quá trình"))
         self.cbChooseLanguage.setText(_translate("MainWindow", "Tiếng việt"))
         self.lbChooseLanguage.setText(_translate("MainWindow", "Ngôn ngữ:"))
+        self.btnSaveFile.setText(_translate("MainWindow", "Lưu file"))
         self.btnSreenShot.setText(_translate(
             "MainWindow", "Chụp ảnh màn hình"))
 
@@ -238,6 +246,20 @@ class MainWindow(QMainWindow):
                 self.labelImg.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
             self.image = fileName
 
+    def saveFile(self):
+        if self.result != '':
+            options = QFileDialog.Options()
+            options |= QFileDialog.DontUseNativeDialog
+            #
+            pathsave = QFileDialog.getSaveFileName(None, "Lưu kết quả", "", "Doc files (*.doc)",
+                                                   options=options)[0]
+            # f = open(pathsave.replace('.doc', '')+'.doc', "w", "utf-8")
+            # f.write(self.result)
+            # f.close()
+            file_output = codecs.open(pathsave.replace(
+                '.doc', '')+'.doc', 'w', 'utf-8')
+            file_output.write(self.result)
+
     # TODO exit application when we exit all windows
     def closeEvent(self, event):
         sys.exit()
@@ -246,7 +268,10 @@ class MainWindow(QMainWindow):
         if self.image != None:
             global language
             detectWord = DetectWord(language, self.image, "result.txt")
-            self.txtResult.setText(detectWord.excute())
+            result = detectWord.excute()
+            self.txtResult.setText(result)
+            print(result)
+            self.result = result
 
     def screenShot(self):
         # mở sniipng tool nek mà mở xong nó ko mỏ lại
