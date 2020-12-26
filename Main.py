@@ -8,6 +8,11 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 import SnippingTool
 import codecs
+import os
+from os import listdir
+from os.path import isfile, join
+from PyQt5.QtWidgets import QMessageBox
+home = os.getenv("HOME")
 
 language = 'eng'
 
@@ -164,12 +169,17 @@ class MainWindow(QMainWindow):
         self.btnSreenShot.setObjectName("btnSreenShot")
         self.btnSreenShot.clicked.connect(self.screenShot)
 
+        self.btnChooseFolder = QPushButton(self.centralwidget)
+        self.btnChooseFolder.setGeometry(QRect(70, 320, 110, 23))
+        self.btnChooseFolder.setObjectName("btnChooseFolder")
+        self.btnChooseFolder.clicked.connect(self.openFolder)
+
         self.lbChooseLanguage = QLabel(self.centralwidget)
-        self.lbChooseLanguage.setGeometry(QRect(70, 320, 110, 23))
+        self.lbChooseLanguage.setGeometry(QRect(200, 320, 110, 23))
         self.lbChooseLanguage.setObjectName("lbChooseLanguage")
 
         self.cbChooseLanguage = QCheckBox(self.centralwidget)
-        self.cbChooseLanguage.setGeometry(QRect(135, 320, 110, 23))
+        self.cbChooseLanguage.setGeometry(QRect(253, 320, 110, 23))
         self.cbChooseLanguage.setObjectName("cbChooseLanguage")
         self.cbChooseLanguage.stateChanged.connect(self.clickBox)
         global language
@@ -193,8 +203,9 @@ class MainWindow(QMainWindow):
         self.btnSaveFile.setGeometry(QRect(500, 290, 80, 23))
         self.btnSaveFile.setObjectName("btnSaveFile")
         self.btnSaveFile.clicked.connect(self.saveFile)
-        
+        self.results = []
         self.result = ''
+        self.files = []
         if image != '':
             self.labelImg.setPixmap(QPixmap(image).scaled(
                 self.labelImg.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
@@ -233,6 +244,7 @@ class MainWindow(QMainWindow):
         self.cbChooseLanguage.setText(_translate("MainWindow", "Tiếng việt"))
         self.lbChooseLanguage.setText(_translate("MainWindow", "Ngôn ngữ:"))
         self.btnSaveFile.setText(_translate("MainWindow", "Lưu file"))
+        self.btnChooseFolder.setText(_translate("MainWindow", "Chọn thư mục"))
         self.btnSreenShot.setText(_translate(
             "MainWindow", "Chụp ảnh màn hình"))
 
@@ -245,6 +257,7 @@ class MainWindow(QMainWindow):
             self.labelImg.setPixmap(QPixmap(fileName).scaled(
                 self.labelImg.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
             self.image = fileName
+            self.files = []
 
     def saveFile(self):
         if self.result != '':
@@ -259,19 +272,68 @@ class MainWindow(QMainWindow):
             file_output = codecs.open(pathsave.replace(
                 '.doc', '')+'.doc', 'w', 'utf-8')
             file_output.write(self.result)
+            QMessageBox.about(self, "Thông báo", "Lưu thành công")
+        elif len(self.results) != 0:
+            my_dir = QFileDialog.getExistingDirectory(
+                self,
+                "Open a folder",
+                home,
+                QFileDialog.ShowDirsOnly
+            )
+            if my_dir == '':
+                return
+            count = 0
+            for result in self.results:
+                count += 1
+                file_output = codecs.open(
+                    my_dir+'\\'+str(count)+'.doc', 'w', 'utf-8')
+                file_output.write(result)
+            QMessageBox.about(self, "Thông báo", "Lưu thành công")
 
     # TODO exit application when we exit all windows
+
     def closeEvent(self, event):
         sys.exit()
 
+    def openFolder(self):
+        my_dir = QFileDialog.getExistingDirectory(
+            self,
+            "Open a folder",
+            home,
+            QFileDialog.ShowDirsOnly
+        )
+        if my_dir == '':
+            return
+        files = []
+        onlyfiles = [f for f in listdir(my_dir) if isfile(join(my_dir, f))]
+        for file in onlyfiles:
+            if file != 'Thumbs.db' and (file.find('.png') != -1 or file.find('.PNG') != -1 or file.find('.jpeg') != -1 or file.find('.jpg') or file.find('.JPG') != -1):
+                files.append(my_dir + '\\'+file)
+        self.files = files
+        self.image = ''
+        print(self.files)
+
     def startProcess(self):
-        if self.image != None:
-            global language
+        global language
+        if self.image != '':
             detectWord = DetectWord(language, self.image, "result.txt")
             result = detectWord.excute()
             self.txtResult.setText(result)
-            print(result)
             self.result = result
+            QMessageBox.about(self, "Thông báo", "Quét hoàn thành")
+        elif len(self.files) != 0:
+            results = []
+            txtResult = ''
+            count = 0
+            for file in self.files:
+                count += 1
+                detectWord = DetectWord(language, file, "result.txt")
+                result = detectWord.excute()
+                results.append(result)
+                txtResult += 'Part '+str(count)+': ' + result
+            self.results = results
+            self.txtResult.setText(txtResult)
+            QMessageBox.about(self, "Thông báo", "Quét hoàn thành")
 
     def screenShot(self):
         # mở sniipng tool nek mà mở xong nó ko mỏ lại
