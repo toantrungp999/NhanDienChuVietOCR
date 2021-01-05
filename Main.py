@@ -59,7 +59,7 @@ class DetectWord:
         tesseract_config = r'--oem 3 --psm 6'
         # now feeding image to tesseract
         # your path may be different
-        pytesseract.pytesseract.tesseract_cmd = 'C:/Program Files/Tesseract-OCR/tesseract.exe'
+        pytesseract.pytesseract.tesseract_cmd = 'C:/DevApp/Python_Library/Tesseract/tesseract.exe'
         details = pytesseract.image_to_data(threshold_img, output_type=pytesseract.Output.DICT,
                                             config=tesseract_config, lang=self.languae)
         # vie
