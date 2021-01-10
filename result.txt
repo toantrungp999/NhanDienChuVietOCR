@@ -1,7 +1,11 @@
-phối với bản quyền mã nguồn mở Apache 2.0. Nó hỗ trợ nhận diện kí tự trên các tập tin hình
-à xuất ra dưới dạng kí tự thuần, himl, pdf, tsv, invisible-text-only pdf. Người dùng có thể sử
-trực tiếp hoặc lập trình viên có thể sử dụng các chức năng thông qua API.
+Labelimg = QLabel(seif.centralwidget)
+DSL ed eae ee)
+Set eee NET uae ve a en CENT
+ECan eee nae as CSB aby
+EsrLeecciegcccicg
 
-'ract được phát triển bởi Hewlett-Packard Laboratories Bristol tại Hewleett-Packard Co,
-
-ey Colorado từ 1985 đến 1994. Sau đó, nó được cập nhật một số thay đổi nhỏ và tạm ngưng
+Sree ey Ee ee eee ea)
+Teer Ce setae KT Cc)
+Ere ee aoe ed ue ED
+Tee CLC a eee ae)
+Teer CCR Mc ed ee aS eS

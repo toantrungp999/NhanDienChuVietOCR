@@ -59,7 +59,7 @@ class DetectWord:
         tesseract_config = r'--oem 3 --psm 6'
         # now feeding image to tesseract
         # your path may be different
-        pytesseract.pytesseract.tesseract_cmd = 'C:/DevApp/Python_Library/Tesseract/tesseract.exe'
+        pytesseract.pytesseract.tesseract_cmd = 'C:/Program Files/Tesseract-OCR/tesseract.exe'
         details = pytesseract.image_to_data(threshold_img, output_type=pytesseract.Output.DICT,
                                             config=tesseract_config, lang=self.languae)
         # vie
@@ -150,59 +150,66 @@ class MainWindow(QMainWindow):
 
         self.centralwidget = QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
-        self.setStyleSheet("background-color: #F0F2F5;")
+        self.setStyleSheet("background-color: white;")
+        self.setWindowIcon(QIcon('logo.png')) 
 
         self.labelImg = QLabel(self.centralwidget)
-        self.labelImg.setGeometry(QRect(50, 20, 260, 260))
+        self.labelImg.setGeometry(QRect(50, 20, 400, 400))
         self.labelImg.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
         self.labelImg.setObjectName("labelImg")
         self.labelImg.setStyleSheet(
             "background-color: gray;border: 1px solid black;")
 
         self.btnChooseImage = QPushButton(self.centralwidget)
-        self.btnChooseImage.setGeometry(QRect(70, 290, 110, 23))
+        self.btnChooseImage.setGeometry(QRect(195, 455, 110, 23))
         self.btnChooseImage.setObjectName("btnChooseImage")
         self.btnChooseImage.clicked.connect(self.openFileNameDialog)
+        self.btnChooseImage.setStyleSheet("background-color: blue; color: white; border:none") 
 
         self.btnSreenShot = QPushButton(self.centralwidget)
-        self.btnSreenShot.setGeometry(QRect(200, 290, 110, 23))
+        self.btnSreenShot.setGeometry(QRect(340, 455, 110, 23))
         self.btnSreenShot.setObjectName("btnSreenShot")
         self.btnSreenShot.clicked.connect(self.screenShot)
+        self.btnSreenShot.setStyleSheet("background-color: blue; color: white; border:none") 
 
         self.btnChooseFolder = QPushButton(self.centralwidget)
-        self.btnChooseFolder.setGeometry(QRect(70, 320, 110, 23))
+        self.btnChooseFolder.setGeometry(QRect(50, 455, 110, 23))
         self.btnChooseFolder.setObjectName("btnChooseFolder")
         self.btnChooseFolder.clicked.connect(self.openFolder)
+        self.btnChooseFolder.setStyleSheet("background-color: blue; color: white; border:none") 
 
         self.lbChooseLanguage = QLabel(self.centralwidget)
-        self.lbChooseLanguage.setGeometry(QRect(200, 320, 110, 23))
+        self.lbChooseLanguage.setGeometry(QRect(190, 425, 110, 23))
         self.lbChooseLanguage.setObjectName("lbChooseLanguage")
 
         self.cbChooseLanguage = QCheckBox(self.centralwidget)
-        self.cbChooseLanguage.setGeometry(QRect(253, 320, 110, 23))
+        self.cbChooseLanguage.setGeometry(QRect(253, 425, 110, 23))
         self.cbChooseLanguage.setObjectName("cbChooseLanguage")
         self.cbChooseLanguage.stateChanged.connect(self.clickBox)
         global language
         if language == 'vie':
             self.cbChooseLanguage.setChecked(True)
 
-        self.btnStart = QPushButton(self.centralwidget)
-        self.btnStart.setGeometry(QRect(300, 340, 111, 23))
-        self.btnStart.setObjectName("btnStart")
-        self.btnStart.clicked.connect(self.startProcess)
-
         self.txtResult = QTextEdit(self.centralwidget)
-        self.txtResult.setGeometry(QRect(400, 20, 260, 260))
+        self.txtResult.setGeometry(QRect(510, 20, 400, 400))
         self.txtResult.setObjectName("txtResult")
+        self.txtResult.setReadOnly(True)
 
         self.labelResult = QLabel(self.centralwidget)
-        self.labelResult.setGeometry(QRect(340, 120, 47, 13))
+        self.labelResult.setGeometry(QRect(460, 200, 47, 13))
         self.labelResult.setObjectName("labelResult")
 
+        self.btnStart = QPushButton(self.centralwidget)
+        self.btnStart.setGeometry(QRect(425, 495, 111, 23))
+        self.btnStart.setObjectName("btnStart")
+        self.btnStart.clicked.connect(self.startProcess)
+        self.btnStart.setStyleSheet("background-color : blue; color: white; border:none") 
+
         self.btnSaveFile = QPushButton(self.centralwidget)
-        self.btnSaveFile.setGeometry(QRect(500, 290, 80, 23))
+        self.btnSaveFile.setGeometry(QRect(655, 455, 110, 23))
         self.btnSaveFile.setObjectName("btnSaveFile")
         self.btnSaveFile.clicked.connect(self.saveFile)
+        self.btnSaveFile.setStyleSheet("background-color : blue; color: white; border:none") 
         self.results = []
         self.result = ''
         self.files = []
@@ -211,7 +218,7 @@ class MainWindow(QMainWindow):
                 self.labelImg.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
         self.image = image
         self.snippingTool = SnippingTool.SnippingWidget()
-        self.resize(710, 380)
+        self.resize(960, 540)
         self.setWindowTitle("Chương trình đọc chữ từ hình ảnh")
         self.setCentralWidget(self.centralwidget)
         self.retranslateUi()
@@ -237,9 +244,9 @@ class MainWindow(QMainWindow):
         self.txtResult.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
                                           "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
                                           "p, li { white-space: pre-wrap; }\n"
-                                          "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\" bgcolor=\"#b0e0e6\">\n"
+                                          "</style></head><body style=\" font-family:\'MS Shell Dlg 2\' ;font-size:8.25pt; font-weight:400; font-style:normal;\" bgcolor=\"#F0F2F5\">\n"
                                           "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
-        self.labelResult.setText(_translate("MainWindow", "Kết quả"))
+        self.labelResult.setText(_translate("MainWindow", "Kết quả:"))
         self.btnStart.setText(_translate("MainWindow", "Bắt đầu quá trình"))
         self.cbChooseLanguage.setText(_translate("MainWindow", "Tiếng việt"))
         self.lbChooseLanguage.setText(_translate("MainWindow", "Ngôn ngữ:"))
